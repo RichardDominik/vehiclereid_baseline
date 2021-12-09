@@ -23,7 +23,8 @@ import os.path as osp
 from torch.autograd import Variable
 import math
 from networks.resnet import resnet50, resnet101
-from dataset.dataset import VeriDataset, AicDataset
+from dataset.dataset import VeriDataset
+# , AicDataset
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -78,14 +79,14 @@ def get_dataset(dataset_name, data_dir,train_list):
                 transforms.ToTensor(),
                 normalize])
         train_set = VeriDataset(data_dir, train_list, train_data_transform, is_train= True )
-    elif dataset_name == 'aic':
-        train_data_transform = transforms.Compose([
-                transforms.Scale((336,336)),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomCrop((crop_size,crop_size)),
-                transforms.ToTensor(),
-                normalize])
-        train_set = AicDataset(data_dir, train_list, train_data_transform, is_train= True )
+    #elif dataset_name == 'aic':
+    #    train_data_transform = transforms.Compose([
+    #            transforms.Scale((336,336)),
+    #            transforms.RandomHorizontalFlip(),
+    #            transforms.RandomCrop((crop_size,crop_size)),
+    #            transforms.ToTensor(),
+    #            normalize])
+    #    train_set = AicDataset(data_dir, train_list, train_data_transform, is_train= True )
     else:
         print("!!!dataset error!!!")
         return
@@ -354,7 +355,7 @@ def accuracy(output, target, topk=(1,)):
 
     res = []
     for k in topk:
-        correct_k = correct[:k].view(-1).float().sum(0)
+        correct_k = correct[:k].reshape(-1).float().sum(0)
         res.append(correct_k.mul_(100.0 / batch_size))
     return res
 

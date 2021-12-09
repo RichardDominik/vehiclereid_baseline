@@ -24,6 +24,9 @@ import math
 from networks.resnet import resnet50, resnet101
 from dataset.dataset import VeriDataset
 
+#pridany kod podla githubu
+import torch.multiprocessing
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 parser = argparse.ArgumentParser(description='PyTorch Relationship')
 
@@ -33,7 +36,7 @@ parser.add_argument('gallerypath', metavar='DIR', help='path to gallery set')
 parser.add_argument('gallerylist', metavar='DIR', help='path to gallery list')
 parser.add_argument('--dataset',  default='veri', type=str,
                     help='dataset name (default: veri)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                     help='number of data loading workers (defult: 4)')
 parser.add_argument('--batch_size', '--batch-size', default=1, type=int, metavar='N',
                     help='mini-batch size (default: 1)')
@@ -106,6 +109,7 @@ def main():
             model.load_state_dict(ckpt['state_dict'])
             print ('!!!load weights success !!! path is ', args.weights)
         except Exception as e:
+            print(e)
             print ('!!!load weights failed !!! path is ', args.weights)
             return
     else:
